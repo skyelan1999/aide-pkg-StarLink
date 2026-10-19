@@ -1,0 +1,76 @@
+{
+  "version": "0.1.2",
+  "sessionNumber": 13,
+  "sessionId": "5be00aff3c70beb683a24c7b24b6f5a3",
+  "runId": "68f33eb28ec94168ad3bd8b886fd8ae6",
+  "model": "deepseek-flash",
+  "status": "completed",
+  "candidateSHA256": "abb6303270b6f8f2b34a2544b8fd97275f458bd18052b70779dd7c9357e23645",
+  "tools": [
+    {
+      "name": "starlink_summary",
+      "arguments": {
+        "code": true
+      },
+      "status": "pass"
+    },
+    {
+      "name": "starlink_search",
+      "arguments": {
+        "query": "workflow",
+        "code": true,
+        "limit": 1
+      },
+      "status": "pass"
+    },
+    {
+      "name": "starlink_search",
+      "arguments": {
+        "query": "插件",
+        "code": true,
+        "limit": 1
+      },
+      "status": "pass"
+    },
+    {
+      "name": "starlink_node",
+      "arguments": {
+        "id": "F3024cf75d8f9",
+        "code": true,
+        "direction": "both",
+        "limit": 20
+      },
+      "status": "pass"
+    },
+    {
+      "name": "starlink_node",
+      "arguments": {
+        "id": "F29163ee652d7",
+        "code": true,
+        "direction": "both",
+        "limit": 20
+      },
+      "status": "pass"
+    },
+    {
+      "name": "starlink_path",
+      "arguments": {
+        "from": "F3024cf75d8f9",
+        "to": "Ffe5a75c7b81f",
+        "undirected": true,
+        "includeStructure": true,
+        "code": true,
+        "maxDepth": 6
+      },
+      "status": "pass"
+    }
+  ],
+  "sameRevision": true,
+  "revision": "Kd9dca7f4a20e6a251a7fb06c",
+  "partial": true,
+  "stale": true,
+  "pathFound": true,
+  "filesProposed": 0,
+  "commandsProposed": 0,
+  "scope": "Functional proof only; timings are independently measured in the fixed-snapshot benchmark. Existing host checkpoint/indexing warnings are preserved."
+}
