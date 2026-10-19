@@ -14,10 +14,12 @@
 
 ## 未验证与限制
 
-- NOT_RUN：付费模型自动发现/选择工具；未为验收发起模型请求。
+- PASS：按用户明确要求，在 Aide 新会话 #11 中以 deepseek-flash 实际执行只读任务。模型调用全部五个 StarLink 工具，任务 completed；原始持久化工具记录均为有效 JSON，无工具错误。摘要 3385 节点 / 5944 关系；workflow 搜索 249 匹配取 3 项；真实节点详情和逆向 contains 路径均成功。Safari 最终页面显示“工具调用 5”及逐项结果。文件与命令提案均为 0。
+- 证据：[AI 实测记录](reviews/2026-10-19-ai-acceptance.json)。原始会话保留本机 `.agent-state/ai-session.json`，未公开正文。
+- 解释纠正：AI 将 status 的 `snapshotLoaded:false / identity:1` 误读为宿主快照滞后。该工具设计上不读取快照，`identity` 与内容 `revision` 是不同维度；这不是工具失败。覆盖范围仍以 summary/search/node/path 的 partial、stale、warnings 为准。
 - NOT_RUN：完整资料库索引覆盖验收；宿主报告仍有未发现/待读取/未解析材料。
 - NOT_RUN：窄屏与所有配色矩阵。Safari 已检查当前桌面宿主主题。
 - UNSUPPORTED：SSH 工作区、`~/` 和 Windows 盘符路径映射，首版明确拒绝。
 - 状态工具只确认连接、身份和解锁状态，覆盖范围为未知；其他工具返回索引修订和范围限制。
 
-真实工具调用与界面检查不能替代真实模型行为或完整索引覆盖验收。原始运行日志与索引返回仅留本机 `.agent-state/`，不随公开仓库或 ZIP 分发。
+本轮已覆盖真实模型调用及 Safari 最终结果，仍不能替代完整索引覆盖验收。原始运行日志与索引返回仅留本机 `.agent-state/`，不随公开仓库或 ZIP 分发。

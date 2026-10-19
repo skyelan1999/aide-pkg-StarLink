@@ -1,0 +1,89 @@
+{
+  "date": "2026-10-19",
+  "hostCommit": "7774f424",
+  "pluginCommit": "eb147da",
+  "pluginVersion": "0.1.0",
+  "sessionNumber": 11,
+  "sessionId": "cfc5411ba2d6e9f7b277edf6752676f1",
+  "runId": "489a76a4eccc1fd374a23a9be3cc9382",
+  "model": "deepseek-flash",
+  "status": "completed",
+  "evidenceSource": "Aide persisted model run toolUses, checked against Safari completed conversation",
+  "tools": [
+    {
+      "tool": "starlink_status",
+      "arguments": {
+        "code": true
+      },
+      "status": "pass"
+    },
+    {
+      "tool": "starlink_summary",
+      "arguments": {
+        "code": true
+      },
+      "status": "pass"
+    },
+    {
+      "tool": "starlink_search",
+      "arguments": {
+        "query": "workflow",
+        "code": true,
+        "limit": 3
+      },
+      "status": "pass"
+    },
+    {
+      "tool": "starlink_node",
+      "arguments": {
+        "id": "F3024cf75d8f9",
+        "direction": "both",
+        "limit": 20,
+        "code": true
+      },
+      "status": "pass"
+    },
+    {
+      "tool": "starlink_path",
+      "arguments": {
+        "from": "F3024cf75d8f9",
+        "to": "Ffe5a75c7b81f",
+        "maxDepth": 8,
+        "undirected": true,
+        "includeStructure": true,
+        "code": true
+      },
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "workspace": "Fc5ffa1008258",
+    "revision": "K0b44a5769c11aa64c4e6af86",
+    "nodeCount": 3385,
+    "edgeCount": 5944,
+    "partial": true,
+    "stale": true,
+    "truncated": true
+  },
+  "search": {
+    "query": "workflow",
+    "totalMatches": 249,
+    "returned": 3
+  },
+  "path": {
+    "from": "F3024cf75d8f9",
+    "to": "Ffe5a75c7b81f",
+    "kind": "contains",
+    "found": true,
+    "reversed": true,
+    "hops": 1
+  },
+  "writes": {
+    "files": 0,
+    "commands": 0
+  },
+  "limitations": [
+    "Results describe a partial stale snapshot, not full indexing or runtime execution.",
+    "Status is intentionally identity-only: identity:1 and snapshotLoaded:false describe this lightweight call, not missing host indexing. The model mischaracterized this as lag; this interpretation is not an observed tool failure."
+  ]
+}
