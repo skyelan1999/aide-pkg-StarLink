@@ -1,0 +1,24 @@
+{
+  "id": "starlink",
+  "name": "StarLink · 星图分析入口",
+  "description": "复用 Aide 星图索引，快速查询节点、证据关系与代码分析结果；向 AI 提供有来源、范围和完整性说明的结果。",
+  "version": "0.1.0",
+  "author": "skyelan1999",
+  "main": "index.js",
+  "homepage": "https://github.com/skyelan1999/aide-pkg-StarLink",
+  "workbench": {
+    "protocol": 1,
+    "entry": "workbench.html",
+    "title": "StarLink · 星图分析入口",
+    "tools": ["starlink_status", "starlink_summary", "starlink_search", "starlink_node", "starlink_path"]
+  },
+  "settingsSchema": {
+    "type": "object",
+    "properties": {
+      "includeCode": {"type": "boolean", "title": "默认包含代码分析", "default": true},
+      "port": {"type": "integer", "title": "Aide 容器内部 HTTPS 端口", "default": 8080, "minimum": 1, "maximum": 65535},
+      "dataDir": {"type": "string", "title": "Aide 运行数据目录", "default": "/data", "description": "读取本机访问令牌和证书的目录，只填写路径，不填写令牌。Docker 默认 /data。"}
+    },
+    "additionalProperties": false
+  }
+}

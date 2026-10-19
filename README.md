@@ -1,0 +1,52 @@
+# StarLink · 星图分析入口
+
+Aide 插件：让 AI 直接读取当前工作区的星图分析结果，并提供可搜索的快捷工作台。
+
+## 安装与使用
+
+1. 在 Aide「插件」中上传 `dist/aide-pkg-StarLink-v0.1.0.zip`，启用 StarLink。
+2. 点击插件卡片的「打开工作台」。读取摘要，搜索文件/符号/关键词，点击节点查看来源与关系；可将节点设置为路径起点、终点。
+3. 对 Aide 说：“用 StarLink 汇总当前星图分析结果”“用 StarLink 搜索 workflow”“查看节点 C… 的入站关系”。
+
+| AI 工具 | 用途 |
+| --- | --- |
+| `starlink_status` | 当前星图工作区、修订与完整性状态 |
+| `starlink_summary` | 节点/关系计数、代码解析计数、连接热点 |
+| `starlink_search` | 按关键词、类型、区域检索已收录节点 |
+| `starlink_node` | 节点位置、索引摘要、入站/出站关系及证据 |
+| `starlink_path` | 两节点最短证据路径，默认有向且排除目录包含关系 |
+
+查询参数 `code` 可覆盖默认代码分析模式。搜索默认 20 条、最多 100 条；节点关系默认 30 条、最多 100 条。路径默认最大 8 跳、可设 1–24 跳；`undirected` 允许逆向追溯，`includeStructure` 包含目录关系。反向追溯不会改变证据的原始箭头。
+
+## 兼容与权限
+
+已对接 Aide `7774f424` / `0.1.17.1 RC1` 的星图接口及工作台协议 v1。无需修改 Aide 主程序；不包含独立分析器，也不发起模型调用或向外部服务上传资料。
+
+这是可信 Node.js 插件，默认在 Aide Docker 容器内执行。后端从 `/data/auth/access-token` 读取本机 Aide 令牌，以 `/data/certs/cert.pem` 校验 HTTPS，仅访问 `127.0.0.1:8080` 的固定只读接口。令牌保留在进程内，不传给模型、日志或工作台 iframe。**不要把令牌填到插件设置或聊天中。** 插件遵守调用前后工作区身份、策略代际和锁屏代际核对；工作台通过 Aide 自带工具通道调用，不能直接联网。
+
+设置仅包含 `includeCode`、容器内部 `port`、运行数据 `dataDir`。宿主浏览器端口 9999 不是容器内部端口。非默认目录可调整 `dataDir`，证书校验保持开启，连接地址固定为回环，不能配置远程 Aide。
+
+首版支持 Docker 标准 `/workspace`、`/context`、`/local` 映射及 `hostLocal` 下可确认的 POSIX 路径。SSH 工作区、`~/` 和 Windows 盘符路径会明确拒绝；不会回退到其他工作区。
+
+## 结果边界
+
+- 查询复用星图现有索引，可能促使宿主同步当前扫描批次；不更改索引策略、不自动开启后台全库扫描。
+- 状态检查仅确认接口和工作区身份，不加载全量快照，也不声称已知覆盖范围。其他查询最多读取 96 MiB 快照，超过限制明确报错，请缩小宿主索引范围。
+- 每次返回 `workspace`、`revision`、`fetchedAt`、`stale`、`truncated`、`partial`、来源覆盖范围及 warnings。扫描尚未覆盖的材料不计为不存在。
+- 文本是宿主已索引的摘要，不保证全文；详情最多 2000 字符，关系证据最多 600 字符。
+- 调用关系和路径是静态分析证据，不能证明运行时调用、接口上线或测试通过。
+- 工作台是查询快捷入口。Aide 的原生三维星图仍从文件面板「知识星图」打开；本插件不复制三维视图，不伪造宿主导航能力。
+- 不保存文件、不执行命令、不修改资料。缺少窄范围资源声明时，由宿主保守调度整个插件执行域。
+
+## 开发与打包
+
+需要 Node.js 和 Python 3，无第三方安装依赖。
+
+```sh
+npm test
+npm run build
+```
+
+生成可直接上传的 ZIP 和 SHA256 文件。`index.js` 自包含且小于 Aide 256 KiB 限制；`workbench.html` 内联页面和桥接代码，不依赖 CDN。
+
+`scripts/workbench-client.js` 来自 Aide `7774f424` 的 `internal/server/web/plugin-workbench-client.js`，用于现行工作台协议。验证状态见 [docs/VERIFICATION.md](docs/VERIFICATION.md)。

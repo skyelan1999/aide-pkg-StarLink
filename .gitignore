@@ -1,0 +1,3 @@
+dist/
+.agent-state/
+.DS_Store
