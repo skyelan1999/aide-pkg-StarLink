@@ -7,7 +7,7 @@ subprocess.run(['node','--check',str(root/'index.js')],check=True)
 manifest=json.loads((root/'manifest.json').read_text())
 assert manifest['id']=='starlink' and manifest['version']==json.loads((root/'package.json').read_text())['version']
 assert 'workbench' not in manifest and (root/'index.js').stat().st_size<=262144
-names=['manifest.json','index.js','README.md','CHANGELOG.md','docs/VERIFICATION.md','docs/reviews/2026-10-19-ai-acceptance.json','docs/reviews/2026-10-19-tools-only-acceptance.json','docs/PERFORMANCE.md','docs/reviews/2026-10-19-snapshot-performance.json','docs/reviews/2026-10-19-incremental-ai-acceptance.json']
+names=['docs/reviews/2026-10-19-light-index.md','docs/reviews/2026-10-19-light-index.json','manifest.json','index.js','README.md','CHANGELOG.md','docs/VERIFICATION.md','docs/reviews/2026-10-19-ai-acceptance.json','docs/reviews/2026-10-19-tools-only-acceptance.json','docs/PERFORMANCE.md','docs/reviews/2026-10-19-snapshot-performance.json','docs/reviews/2026-10-19-incremental-ai-acceptance.json']
 out=root/'dist'/f'aide-pkg-StarLink-v{manifest["version"]}.zip';out.parent.mkdir(exist_ok=True)
 with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
     for name in sorted(names):

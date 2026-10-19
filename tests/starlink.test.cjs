@@ -41,3 +41,10 @@ test('daemon snapshot reader serializes concurrent calls and isolates graph mode
 test('server reset replaces all old nodes and Unicode excerpts preserve the original projection',()=>{
  const {mergeSnapshot}=require('../index').testing;const first=mergeSnapshot(null,graph());const fresh={...graph(),revision:'new',nodes:[{id:'new',name:'新说明',kind:'file',text:'😀'.repeat(2500)}],edges:[]};const next=mergeSnapshot(first,fresh);assert.deepEqual(next.graph.nodes.map(n=>n.id),['new']);assert.equal(next.graph.edges.length,0);const node=analyze('node',next.graph,{id:'new'});assert.equal(Array.from(node.node.excerpt).length,2000);assert.equal(node.node.excerpt,'😀'.repeat(2000));assert.equal(analyze('search',next.graph,{query:'😀',limit:1}).results[0].excerpt,'😀'.repeat(400));
 });
+test('light outline finds deep headings/declarations without returning the whole outline',()=>{
+ const g=graph();g.nodes=[{id:'F1',name:'source.md',path:'docs/source.md',kind:'file',text:'prefix only',outline:{entries:[{kind:'heading',line:400,text:'## 深层 恢复策略'},{kind:'heading',line:500,text:'## private unrelated title'}],truncated:true}},{id:'F2',name:'code.go',path:'src/code.go',kind:'file',text:'prefix only',outline:{entries:[{kind:'declaration-candidate',line:300,text:'func RecoverState(ctx context.Context) error'}]}}];
+ const r=analyze('search',g,{query:'深层 恢复策略'});assert.equal(r.totalMatches,1);assert.deepEqual(r.results[0].match,{kind:'heading',line:400,text:'## 深层 恢复策略'});assert.equal(r.results[0].node.outlineCount,2);assert.equal(r.results[0].node.outlineTruncated,true);assert.equal(JSON.stringify(r).includes('private unrelated title'),false);
+ assert.equal(analyze('search',g,{query:'RecoverState'}).results[0].match.line,300);
+ const changed={...g,nodes:g.nodes.map(n=>({...n,outline:undefined}))};assert.equal(analyze('search',changed,{query:'RecoverState'}).totalMatches,0);
+ assert.equal(analyze('search',g,{query:'unwritten full body'}).totalMatches,0);
+});

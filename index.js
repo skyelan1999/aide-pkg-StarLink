@@ -153,6 +153,7 @@ function metadata(g) {
 function publicNode(n, includeText = false) {
   const out = {};
   for (const k of ['id','name','kind','region','path','root','source','sourceName','sourceType','origin','format','session','readState','size','modified','language','symbolKind','line','endLine','parentFile','signature','contentHash','indexedTextHash','indexedTextBytes']) if (n[k] !== undefined) out[k] = n[k];
+  if (n.outline) { out.outlineCount=Math.min(32,n.outline.entries?.length||0); out.outlineTruncated=!!n.outline.truncated; }
   if (includeText && n.text) out.excerpt = clip(n.text, 2000);
   return out;
 }
@@ -191,15 +192,17 @@ function analyze(action, g, args = {}) {
     for (const n of g.nodes) {
       if (args.kind && n.kind !== args.kind || args.region && n.region !== args.region) continue;
       let normalized=nodeSearchCache.get(n);
-      if(!normalized){normalized={name:String(n.name||'').toLocaleLowerCase(),p:String(n.path||'').toLocaleLowerCase(),body:String(n.text||'').toLocaleLowerCase(),signature:String(n.signature||'').toLocaleLowerCase(),id:String(n.id).toLocaleLowerCase()};nodeSearchCache.set(n,normalized);}
-      const {name,p,body,signature,id}=normalized;
-      if (!terms.every(t=>name.includes(t)||p.includes(t)||body.includes(t)||signature.includes(t)||id===t)) continue;
+      if(!normalized){normalized={name:String(n.name||'').toLocaleLowerCase(),p:String(n.path||'').toLocaleLowerCase(),body:String(n.text||'').toLocaleLowerCase(),signature:String(n.signature||'').toLocaleLowerCase(),id:String(n.id).toLocaleLowerCase(),outline:(Array.isArray(n.outline?.entries)?n.outline.entries:[]).slice(0,32).filter(e=>Number.isInteger(e.line)&&e.line>0&&['heading','declaration-candidate'].includes(e.kind)&&typeof e.text==='string').map(e=>({kind:e.kind,line:e.line,text:clip(e.text,240),lower:clip(e.text,240).toLocaleLowerCase()}))};nodeSearchCache.set(n,normalized);}
+      const {name,p,body,signature,id,outline}=normalized;
+      if (!terms.every(t=>name.includes(t)||p.includes(t)||body.includes(t)||signature.includes(t)||id===t||outline.some(e=>e.lower.includes(t)))) continue;
+      const contentTerms=terms.filter(t=>!p.includes(t)&&!name.includes(t));
+      const match=outline.map(e=>({entry:e,hits:contentTerms.filter(t=>e.lower.includes(t)).length})).filter(e=>e.hits>0).sort((a,b)=>b.hits-a.hits||a.entry.line-b.entry.line)[0]?.entry;
       const score=(name===q?100:0)+(name.includes(q)?30:0)+(p.includes(q)?15:0)+(signature.includes(q)?10:0);
-      const hit=body.indexOf(terms[0]);
-      results.push({node:n,score,hit});
+      const hit=(contentTerms.length?contentTerms:terms).map(t=>body.indexOf(t)).find(i=>i>=0)??-1;
+      results.push({node:n,score,hit,match});
     }
     results.sort((a,b)=>b.score-a.score||a.node.id.localeCompare(b.node.id));
-    return {...meta,query:args.query,totalMatches:results.length,resultLimited:results.length>limit,results:results.slice(0,limit).map(({node,score,hit})=>({node:publicNode(node),score,...(hit>=0?{excerpt:clip(String(node.text).slice(Math.max(0,hit-70)),400)}:{})}))};
+    return {...meta,query:args.query,totalMatches:results.length,resultLimited:results.length>limit,results:results.slice(0,limit).map(({node,score,hit,match})=>({node:publicNode(node),score,...(match?{match:{kind:match.kind,line:match.line,text:match.text},excerpt:match.text}:hit>=0?{excerpt:clip(String(node.text).slice(Math.max(0,hit-70)),400)}:{})}))};
   }
   const {nodes,adj} = index(g);
   if (action === 'node') {
@@ -231,7 +234,7 @@ const baseProperties={code:{type:'boolean',description:'是否包含代码层次
 const definitions=[
   ['status','检查星图索引可用性、工作区、版本及完整性状态',{}],
   ['summary','读取星图分析摘要、代码解析计数、关系类型和连接最多的节点',{}],
-  ['search','搜索星图已有节点与索引摘要，返回可用于详情和路径查询的节点编号',{query:{type:'string'},kind:{type:'string'},region:{type:'string'},limit:{type:'integer',minimum:1,maximum:100}},['query']],
+  ['search','搜索星图已有节点、索引摘要和有界标题/函数声明索引；仅返回命中片段与行号，未命中不代表全文不存在',{query:{type:'string'},kind:{type:'string'},region:{type:'string'},limit:{type:'integer',minimum:1,maximum:100}},['query']],
   ['node','按节点编号读取已索引的来源位置、摘要、入站及出站关系证据',{id:{type:'string'},direction:{type:'string',enum:['both','in','out']},limit:{type:'integer',minimum:1,maximum:100}},['id']],
   ['path','查询两个节点之间的最短索引证据路径；不等于运行轨迹',{from:{type:'string'},to:{type:'string'},maxDepth:{type:'integer',minimum:1,maximum:24},undirected:{type:'boolean'},includeStructure:{type:'boolean'}},['from','to']]
 ];
