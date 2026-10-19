@@ -1,12 +1,11 @@
-# StarLink · 星图分析入口
+# StarLink · 星图查询
 
-Aide 插件：让 AI 直接读取当前工作区的星图分析结果，并提供可搜索的快捷工作台。
+供 Aide AI 直接调用当前工作区星图分析结果的只读插件。没有独立界面，安装启用后直接在对话中使用。
 
 ## 安装与使用
 
-1. 在 Aide「插件」中上传 `dist/aide-pkg-StarLink-v0.1.0.zip`，启用 StarLink。
-2. 点击插件卡片的「打开工作台」。读取摘要，搜索文件/符号/关键词，点击节点查看来源与关系；可将节点设置为路径起点、终点。
-3. 对 Aide 说：“用 StarLink 汇总当前星图分析结果”“用 StarLink 搜索 workflow”“查看节点 C… 的入站关系”。
+1. 在 Aide 插件市场安装 StarLink，或上传 Release 中的 `aide-pkg-StarLink-v0.1.1.zip`，启用插件。
+2. 对 Aide 说：“用 StarLink 汇总当前星图分析结果”“用 StarLink 搜索 workflow”“查看节点 C… 的入站关系”。
 
 | AI 工具 | 用途 |
 | --- | --- |
@@ -20,9 +19,9 @@ Aide 插件：让 AI 直接读取当前工作区的星图分析结果，并提�
 
 ## 兼容与权限
 
-已对接 Aide `7774f424` / `0.1.17.1 RC1` 的星图接口及工作台协议 v1。无需修改 Aide 主程序；不包含独立分析器，也不发起模型调用或向外部服务上传资料。
+已对接 Aide `7774f424` / `0.1.17.1 RC1` 的星图接口。无需修改 Aide 主程序；不包含独立分析器，也不发起模型调用或向外部服务上传资料。
 
-这是可信 Node.js 插件，默认在 Aide Docker 容器内执行。后端从 `/data/auth/access-token` 读取本机 Aide 令牌，以 `/data/certs/cert.pem` 校验 HTTPS，仅访问 `127.0.0.1:8080` 的固定只读接口。令牌保留在进程内，不传给模型、日志或工作台 iframe。**不要把令牌填到插件设置或聊天中。** 插件遵守调用前后工作区身份、策略代际和锁屏代际核对；工作台通过 Aide 自带工具通道调用，不能直接联网。
+这是可信 Node.js 插件，默认在 Aide Docker 容器内执行。后端从 `/data/auth/access-token` 读取本机 Aide 令牌，以 `/data/certs/cert.pem` 校验 HTTPS，仅访问 `127.0.0.1:8080` 的固定只读接口。令牌保留在进程内，不传给模型或日志。**不要把令牌填到插件设置或聊天中。** 插件遵守调用前后工作区身份、策略代际和锁屏代际核对；五个工具通过 Aide 现有模型工具调用入口执行。
 
 设置仅包含 `includeCode`、容器内部 `port`、运行数据 `dataDir`。宿主浏览器端口 9999 不是容器内部端口。非默认目录可调整 `dataDir`，证书校验保持开启，连接地址固定为回环，不能配置远程 Aide。
 
@@ -35,7 +34,7 @@ Aide 插件：让 AI 直接读取当前工作区的星图分析结果，并提�
 - 每次返回 `workspace`、`revision`、`fetchedAt`、`stale`、`truncated`、`partial`、来源覆盖范围及 warnings。扫描尚未覆盖的材料不计为不存在。
 - 文本是宿主已索引的摘要，不保证全文；详情最多 2000 字符，关系证据最多 600 字符。
 - 调用关系和路径是静态分析证据，不能证明运行时调用、接口上线或测试通过。
-- 工作台是查询快捷入口。Aide 的原生三维星图仍从文件面板「知识星图」打开；本插件不复制三维视图，不伪造宿主导航能力。
+- v0.1.1 不再提供独立工作台。需要三维视图时，使用 Aide 文件面板的「知识星图」。
 - 不保存文件、不执行命令、不修改资料。缺少窄范围资源声明时，由宿主保守调度整个插件执行域。
 
 ## 开发与打包
@@ -47,6 +46,6 @@ npm test
 npm run build
 ```
 
-生成可直接上传的 ZIP 和 SHA256 文件。`index.js` 自包含且小于 Aide 256 KiB 限制；`workbench.html` 内联页面和桥接代码，不依赖 CDN。
+生成可直接上传的 ZIP 和 SHA256 文件。`index.js` 自包含且小于 Aide 256 KiB 限制；包内只含工具入口、清单及说明，没有界面资源。
 
-`scripts/workbench-client.js` 来自 Aide `7774f424` 的 `internal/server/web/plugin-workbench-client.js`，用于现行工作台协议。验证状态见 [docs/VERIFICATION.md](docs/VERIFICATION.md)。
+验证状态见 [docs/VERIFICATION.md](docs/VERIFICATION.md)。

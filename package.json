@@ -1,1 +1,9 @@
-{"name":"aide-pkg-starlink","version":"0.1.0","private":true,"scripts":{"test":"node --test tests/*.test.cjs","build":"python3 scripts/package.py"}}
+{
+  "name": "aide-pkg-starlink",
+  "version": "0.1.1",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "build": "python3 scripts/package.py"
+  }
+}
