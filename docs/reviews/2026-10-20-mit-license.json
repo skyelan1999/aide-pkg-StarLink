@@ -1,0 +1,13 @@
+{
+  "version": "0.1.4",
+  "license": "MIT",
+  "bytes": 38501,
+  "sha256": "98795650fd6b4306b958174e8bb196d82fceccf13eb8a79e18349c8296a72440",
+  "verification": [
+    "Build/package syntax and CRC check PASS",
+    "LICENSE exact MIT text; package.json and manifest declare MIT",
+    "Exact extracted ZIP regression:17 tests pass with --test-isolation=none",
+    "index.js byte-identical to previous main; license/distribution-only change"
+  ],
+  "scope": "No UI/runtime changes or new paid-model calls. Existing historical query acceptance stays historical."
+}
