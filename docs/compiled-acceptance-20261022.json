@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "packageSHA256": "777eadb15e7f7d7ad53891e38c95ee2e4c77b9cefabf02233d0de73a8712f1fa",
+  "packageSHA256": "8c4d269afd6e1ab2492a95746c2846a9a7a14ef50058fd57c2cdcfc77d33d1ec",
   "architectureTests": [
     {
       "arch": "arm64",
@@ -31,5 +31,6 @@
   "sourceEntryIncluded": false,
   "nodeVersion": "24.22.0",
   "marketUpload": false,
-  "trackingIssue": "skyelan1999/aide-pkg-AutoAiModelRouter#1"
+  "trackingIssue": "skyelan1999/aide-pkg-AutoAiModelRouter#1",
+  "version": "0.1.4"
 }
