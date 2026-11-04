@@ -4,7 +4,7 @@
 
 ## 安装与使用
 
-1. 在 Aide 插件市场安装 StarLink，或上传 Release 中的 `aide-pkg-StarLink-v0.1.4.zip`，启用插件。
+1. 在 Aide 插件市场安装 StarLink，或上传 Release 中的 `aide-pkg-StarLink-v0.1.5.zip`，启用插件。
 2. 确认插件守护进程为运行状态；从旧版升级会启动常驻进程，首次安装若未自动启动，可在 Aide 插件管理的守护进程控制中启动 StarLink。
 3. 对 Aide 说：“用 StarLink 汇总当前星图分析结果”“用 StarLink 搜索 workflow”“查看节点 C… 的入站关系”。
 
@@ -26,7 +26,7 @@
 
 设置仅包含 `includeCode`、容器内部 `port`、运行数据 `dataDir`。宿主浏览器端口 9999 不是容器内部端口。非默认目录可调整 `dataDir`，证书校验保持开启，连接地址固定为回环，不能配置远程 Aide。
 
-首版支持 Docker 标准 `/workspace`、`/context`、`/local` 映射及 `hostLocal` 下可确认的 POSIX 路径。SSH 工作区、`~/` 和 Windows 盘符路径会明确拒绝；不会回退到其他工作区。
+支持本地与 SSH 工作区。SSH 模式只读取当前 Aide 实例经身份校验的知识星图 API，不暴露远端路径或凭据，也不回退到容器本地 `/workspace`。本地模式仍校验工作区根映射。`~/` 和 Windows 盘符路径映射保持明确拒绝。
 
 ## 快照检索性能
 

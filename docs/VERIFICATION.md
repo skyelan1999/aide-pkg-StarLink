@@ -31,5 +31,6 @@
 - 状态检查只确认连接、身份和解锁状态，不加载全图。`snapshotLoaded:false / revision:identity:1` 描述轻量调用，不表示宿主没有快照；它与内容 revision 是不同维度。
 - 快照数值随渐进扫描变化；partial/stale/warnings 必须保留。静态关系不是运行轨迹，未收录不代表不存在。
 - NOT_RUN：完整资料库索引覆盖验收。
-- UNSUPPORTED：SSH 工作区、`~/` 和 Windows 盘符路径映射。Docker 默认工作区及可确认的 POSIX 映射沿用现有支持。
+- 支持本地和 SSH 工作区。SSH 只使用身份固定的本机 Aide 知识星图 HTTPS API，要求插件上下文不暴露本地 workspace root；不回退读取本机 `/workspace`。
+- UNSUPPORTED：`~/` 和 Windows 盘符路径的本地工作区映射。Docker 默认工作区及可确认的 POSIX 映射沿用现有支持。
 - 原始运行日志及索引正文仅留本机 `.agent-state/`，不随公开仓库或 ZIP 分发。
