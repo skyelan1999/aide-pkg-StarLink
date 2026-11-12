@@ -83,3 +83,12 @@ test('older hosts without explicit AI scope acknowledgment fail before graph dow
  const request=async route=>{if(route.includes('/updates'))graphs++;const result=await base(route);if(route.includes('/identity'))delete result.scope;return result;};
  await assert.rejects(snapshot({}, {},{workspaceRoot:'/workspace'},request),/升级宿主/);assert.equal(graphs,0);
 });
+
+test('SSH snapshots bind remote identity and never read local paths',async()=>{
+ const w={mode:'ssh',path:'/srv/project',host:'fixture-a'},id='F'+require('node:crypto').createHash('sha256').update([w.mode,w.path,w.host].join('|')+'\0scope\0\0.').digest('hex').slice(0,12);
+ const base=requestFixture();const request=async route=>{if(route==='/api/workspace-config')return {workspace:w};const result=await base(route);return route.includes('/knowledge-map/')?{...result,workspace:id}:result;};
+ const result=await snapshot({}, {},{workspaceRoot:''},request);assert.equal(result.workspace,id);
+ await assert.rejects(snapshot({}, {},{workspaceRoot:'/workspace'},request),/SSH/);
+ const stale=async route=>route==='/api/workspace-config'?{workspace:{...w,host:'fixture-b'}}:request(route);
+ await assert.rejects(snapshot({}, {},{workspaceRoot:''},stale),/身份/);
+});
