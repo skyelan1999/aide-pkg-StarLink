@@ -13,6 +13,7 @@ def main():
  files['index.js']=(ROOT/'native/loader.cjs').read_bytes()
  for name in ['manifest.json','README.md','LICENSE','capabilities.json','workbench.html']:
   if (ROOT/name).exists():files[name]=(ROOT/name).read_bytes()
+ files['licenses/UNICODE-LICENSE']=(ROOT/'unicode/LICENSE').read_bytes()
  files['licenses/NODE-LICENSE']=(ROOT/'native/NODE-LICENSE').read_bytes()
  files['BINARY-DISTRIBUTION.md']=(ROOT/'docs/BINARY-DISTRIBUTION.md').read_bytes()
  out=ROOT/'dist'/f'aide-pkg-{manifest["id"]}-v{manifest["version"]}-compiled-linux-universal.zip';out.parent.mkdir(exist_ok=True)

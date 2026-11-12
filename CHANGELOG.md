@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5 source candidate — 2026-11-12
+
+- Use Unicode 17 default full case folding plus canonical normalization, preserving original excerpt positions (#804/#805 in Aide).
+- Request and require explicit AI-scoped host graph snapshots; invalidate cached data after visibility changes (#796 in Aide). Requires the corresponding Aide host update.
+- Source/analyzer and actual isolated Aide + Node daemon acceptance only. The published 0.1.4 universal compiled package and installed plugins are unchanged. No 0.1.5 binary release or marketplace upgrade is claimed.
+
 ## 0.1.4 — 2026-10-20
 
 - 补充 MIT LICENSE，package.json 和插件清单明确声明 MIT。
