@@ -70,3 +70,9 @@ npm run build
 ## 许可证
 
 本项目采用 [MIT License](LICENSE)，版权声明见 LICENSE。0.1.4 起安装包包含 LICENSE 和声明 MIT 的 package.json。
+
+## 0.1.5 source compatibility
+
+The source candidate uses Unicode 17.0 default full case folding and canonical normalization. Search excerpts retain original text. It requests `scope=ai` on both knowledge-map identity and updates and requires the host to acknowledge that scope. A host without the new API fails explicitly before downloading graph text. Hiding a reference invalidates the AI cache; manual browsing remains available.
+
+See [current source verification](docs/reviews/2026-11-12-unicode-visibility.md). This is a source change; the 0.1.4 published compiled package and existing installations are unchanged.
