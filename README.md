@@ -76,3 +76,8 @@ npm run build
 The source candidate uses Unicode 17.0 default full case folding and canonical normalization. Search excerpts retain original text. It requests `scope=ai` on both knowledge-map identity and updates and requires the host to acknowledge that scope. A host without the new API fails explicitly before downloading graph text. Hiding a reference invalidates the AI cache; manual browsing remains available.
 
 See [current source verification](docs/reviews/2026-11-12-unicode-visibility.md). This is a source change; the 0.1.4 published compiled package and existing installations are unchanged.
+
+
+### SSH 工作区（0.1.6 源码候选）
+
+SSH 调用读取当前宿主中与所选远端工作区身份一致的 AI 可见范围星图。插件不接收 SSH 密钥，不扫描本机 `/workspace`，也不创建自己的 SSH 连接。工作区身份、锁定代次、可见性策略或索引状态在查询期间变化时丢弃结果；旧宿主缺少 AI scope 确认时仍拒绝。主机代码索引本身的扫描范围与完整性限制继续适用。尚未替换已安装插件。

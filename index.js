@@ -108,10 +108,15 @@ function transport(settings = {}) {
 function sameIdentity(a, b) { return a.workspace === b.workspace && a.epoch === b.epoch && a.policy === b.policy; }
 function assertWorkspace(api, identity, config, workspaceConfig) {
   const w = workspaceConfig.workspace;
-  if (!w || w.mode !== 'local' || typeof api.workspaceRoot !== 'string' || !api.workspaceRoot) throw Error('StarLink 当前仅支持绑定到本地工作区的调用；SSH 工作区不可回退读取本机星图');
+  if (!w || !['local','ssh'].includes(w.mode) || typeof api.workspaceRoot !== 'string') throw Error('无法确认调用的工作区身份');
   const workspaceID = [w.mode, w.path, w.host].join('|');
   const graphID = 'F' + crypto.createHash('sha256').update(workspaceID + '\0scope\0\0.').digest('hex').slice(0,12);
   if (identity.workspace !== graphID) throw Error('工作区身份已变化，请重新调用');
+  if (w.mode === 'ssh') {
+    if (api.workspaceRoot !== '') throw Error('SSH 调用不得绑定本机文件根');
+    return; // Read only the AI-scoped graph pinned by the host, never local files.
+  }
+  if (!api.workspaceRoot) throw Error('本地工作区调用缺少文件根');
   const raw = w.path || '/workspace';
   if (typeof raw !== 'string' || raw.includes('|') || raw.startsWith('~/') || /^[a-z]:/i.test(raw)) throw Error('此工作区路径映射尚不支持，请使用 Aide 的 /workspace 或 /local 路径');
   let expected;

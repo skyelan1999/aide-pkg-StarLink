@@ -38,3 +38,10 @@
 - 新增摘要、搜索、来源详情和证据路径快捷工作台。
 - 返回索引完整性与来源范围；核对工作区和锁屏代际。
 - 提供无外部依赖的 ZIP 打包和回归测试。
+
+
+## 0.1.6 — source candidate
+
+- Query the matching host graph for SSH workspaces with no local-root fallback.
+- Preserve explicit AI scope, lock/epoch/policy guards and Unicode/cache behavior.
+- Unit tests and exact candidate ZIP/daemon acceptance against a real isolated SSH workspace passed; publication is separate.
