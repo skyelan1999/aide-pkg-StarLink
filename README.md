@@ -4,7 +4,7 @@
 
 ## 安装与使用
 
-1. 在 Aide 插件市场安装 StarLink，或上传 Release 中的 `aide-pkg-StarLink-v0.1.4.zip`，启用插件。
+1. 在 Aide 插件市场安装 StarLink，或上传 Release 中的 `aide-pkg-StarLink-v0.1.6.zip`，启用插件。
 2. 确认插件守护进程为运行状态；从旧版升级会启动常驻进程，首次安装若未自动启动，可在 Aide 插件管理的守护进程控制中启动 StarLink。
 3. 对 Aide 说：“用 StarLink 汇总当前星图分析结果”“用 StarLink 搜索 workflow”“查看节点 C… 的入站关系”。
 
@@ -71,13 +71,13 @@ npm run build
 
 本项目采用 [MIT License](LICENSE)，版权声明见 LICENSE。0.1.4 起安装包包含 LICENSE 和声明 MIT 的 package.json。
 
-## 0.1.5 source compatibility
+## 0.1.6 compatibility
 
-The source candidate uses Unicode 17.0 default full case folding and canonical normalization. Search excerpts retain original text. It requests `scope=ai` on both knowledge-map identity and updates and requires the host to acknowledge that scope. A host without the new API fails explicitly before downloading graph text. Hiding a reference invalidates the AI cache; manual browsing remains available.
+Version 0.1.6 uses Unicode 17.0 default full case folding and canonical normalization. Search excerpts retain original text. It requests `scope=ai` on both knowledge-map identity and updates and requires the host to acknowledge that scope. A host without the new API fails explicitly before downloading graph text. Hiding a reference invalidates the AI cache; manual browsing remains available.
 
-See [current source verification](docs/reviews/2026-11-12-unicode-visibility.md). This is a source change; the 0.1.4 published compiled package and existing installations are unchanged.
+See [current source verification](docs/reviews/2026-11-12-unicode-visibility.md). Requires Aide 0.1.19.0 RC1 or newer. Update the host before installing this package; old hosts fail explicitly. Previous releases remain available, and host updates do not replace an installed plugin.
 
 
-### SSH 工作区（0.1.6 源码候选）
+### SSH 工作区（0.1.6）
 
-SSH 调用读取当前宿主中与所选远端工作区身份一致的 AI 可见范围星图。插件不接收 SSH 密钥，不扫描本机 `/workspace`，也不创建自己的 SSH 连接。工作区身份、锁定代次、可见性策略或索引状态在查询期间变化时丢弃结果；旧宿主缺少 AI scope 确认时仍拒绝。主机代码索引本身的扫描范围与完整性限制继续适用。尚未替换已安装插件。
+SSH 调用读取当前宿主中与所选远端工作区身份一致的 AI 可见范围星图。插件不接收 SSH 密钥，不扫描本机 `/workspace`，也不创建自己的 SSH 连接。工作区身份、锁定代次、可见性策略或索引状态在查询期间变化时丢弃结果；旧宿主缺少 AI scope 确认时仍拒绝。主机代码索引本身的扫描范围与完整性限制继续适用。需要 Aide 0.1.19.0 RC1；通过市场或手动导入升级已安装插件。
